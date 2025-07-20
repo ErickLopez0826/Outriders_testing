@@ -1,0 +1,12 @@
+{
+  "name": "api-outriders",
+  "version": "1.0.0",
+  "description": "API estructurada con metodología Onion",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "keywords": ["onion", "api", "nodejs"],
+  "author": "",
+  "license": "ISC"
+} 

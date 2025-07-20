@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "nombre_empresa": "Carnicería Los Hermanos",
+    "rfc": "CLH920101ABC",
+    "direccion": "Av. Central 123, Col. Centro, CDMX",
+    "contacto": "Juan Pérez",
+    "telefono": "5551234567",
+    "email": "contacto@loshermanos.com"
+  },
+  {
+    "id": 2,
+    "nombre_empresa": "Frutería Doña Mary",
+    "rfc": "FDM930202DEF",
+    "direccion": "Calle 5 de Mayo 45, Col. Juárez, CDMX",
+    "contacto": "María López",
+    "telefono": "5559876543",
+    "email": "ventas@donamary.com"
+  },
+  {
+    "id": 3,
+    "nombre_empresa": "Abarrotes El Centro",
+    "rfc": "AEC940303GHI",
+    "direccion": "Plaza Principal 1, Col. Centro, CDMX",
+    "contacto": "Carlos Ruiz",
+    "telefono": "5551122334",
+    "email": "info@elcentro.com"
+  }
+]

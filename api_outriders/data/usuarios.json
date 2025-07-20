@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "nombre": "Juan Pérez",
+    "email": "contacto@loshermanos.com",
+    "password": "cliente123",
+    "rol": "cliente",
+    "id_cliente": 1
+  },
+  {
+    "id": 2,
+    "nombre": "Admin APYCAR",
+    "email": "admin@apycar.com",
+    "password": "admin123",
+    "rol": "admin"
+  }
+]

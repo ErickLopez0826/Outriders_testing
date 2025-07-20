@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "id_pedido": 2,
+    "descripcion": "Retraso por tráfico intenso en la zona centro.",
+    "fecha": "2024-07-19T12:00:00Z",
+    "estatus": "Abierta"
+  },
+  {
+    "id": 2,
+    "id_pedido": 5,
+    "descripcion": "Producto dañado durante el transporte.",
+    "fecha": "2024-07-19T16:00:00Z",
+    "estatus": "Resuelta"
+  }
+] 

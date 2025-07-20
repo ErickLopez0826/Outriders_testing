@@ -1,0 +1,185 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Outriders",
+    "version": "1.0.0",
+    "description": "Documentación de la API Outriders.\n\n**Autenticación:** Todos los endpoints protegidos requieren un token JWT en el header Authorization. El token debe incluir el campo `rol` (`cliente` o `admin`).\n\n**Rutas:**\n- `/api` — Endpoints para clientes (rol: cliente)\n- `/api/admin` — Endpoints para administradores (rol: admin)"
+  },
+  "tags": [
+    { "name": "Cliente", "description": "Operaciones para usuarios con rol cliente" },
+    { "name": "Admin", "description": "Operaciones para usuarios con rol admin" },
+    { "name": "Logística", "description": "Operaciones de logística y seguimiento de pedidos (rol: admin)" }
+  ],
+  "paths": {
+    "/api/register": {
+      "post": {
+        "tags": ["Cliente"],
+        "summary": "Registrar un nuevo cliente y usuario",
+        "requestBody": {"required": true, "content": {"application/json": {"schema": {"type": "object", "properties": {"nombre": {"type": "string"}, "email": {"type": "string"}, "telefono": {"type": "string"}, "username": {"type": "string"}, "password": {"type": "string"}}}}}},
+        "responses": {"201": {"description": "Registro exitoso"}, "400": {"description": "Campos obligatorios"}, "409": {"description": "Usuario o email ya existe"}}
+      }
+    },
+    "/api/login": {
+      "post": {
+        "tags": ["Cliente"],
+        "summary": "Autenticación de usuario y entrega de token JWT (rol: cliente o admin)",
+        "requestBody": {"required": true, "content": {"application/json": {"schema": {"type": "object", "properties": {"username": {"type": "string"}, "password": {"type": "string"}}}}}},
+        "responses": {"200": {"description": "Token JWT"}, "401": {"description": "Credenciales inválidas"}}
+      }
+    },
+    "/api/catalogo": {
+      "get": {
+        "tags": ["Cliente"],
+        "summary": "Obtener todos los productos disponibles",
+        "responses": {"200": {"description": "Lista de productos"}}
+      }
+    },
+    "/api/productos/{id}": {
+      "get": {
+        "tags": ["Cliente"],
+        "summary": "Obtener un producto específico",
+        "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+        "responses": {"200": {"description": "Producto encontrado"}, "404": {"description": "No encontrado"}}
+      }
+    },
+    "/api/pedidos": {
+      "post": {
+        "tags": ["Cliente"],
+        "summary": "Crear un nuevo pedido (rol: cliente)",
+        "security": [{"bearerAuth": []}],
+        "requestBody": {"required": true, "content": {"application/json": {"schema": {"type": "object", "properties": {"clienteId": {"type": "string"}, "productos": {"type": "array", "items": {"type": "object", "properties": {"productoId": {"type": "string"}, "cantidad": {"type": "integer"}}}}}}}}},
+        "responses": {"201": {"description": "Pedido creado"}, "400": {"description": "Error de validación"}}
+      }
+    },
+    "/api/pedidos/{id}": {
+      "get": {
+        "tags": ["Cliente"],
+        "summary": "Obtener un pedido por ID (rol: cliente)",
+        "security": [{"bearerAuth": []}],
+        "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+        "responses": {"200": {"description": "Pedido encontrado"}, "404": {"description": "No encontrado"}}
+      },
+      "put": {
+        "tags": ["Admin"],
+        "summary": "Editar productos o cantidades de un pedido existente (rol: admin)",
+        "security": [{"bearerAuth": []}],
+        "requestBody": {"required": true, "content": {"application/json": {"schema": {"type": "object", "properties": {"productos": {"type": "array", "items": {"type": "object", "properties": {"productoId": {"type": "string"}, "cantidad": {"type": "integer"}}}}}}}}},
+        "responses": {"200": {"description": "Pedido actualizado"}, "400": {"description": "Error de validación"}}
+      },
+      "delete": {
+        "tags": ["Admin"],
+        "summary": "Cancelar un pedido (rol: admin)",
+        "security": [{"bearerAuth": []}],
+        "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+        "responses": {"200": {"description": "Pedido cancelado"}, "400": {"description": "No se puede cancelar"}}
+      }
+    },
+    "/api/pedidos/cliente/{id}": {
+      "get": {
+        "tags": ["Cliente"],
+        "summary": "Historial de pedidos por cliente (rol: cliente)",
+        "security": [{"bearerAuth": []}],
+        "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+        "responses": {"200": {"description": "Lista de pedidos"}}
+      }
+    },
+    "/api/pedidos/estado/{id}": {
+      "put": {
+        "tags": ["Admin"],
+        "summary": "Cambiar estado del pedido (rol: admin)",
+        "security": [{"bearerAuth": []}],
+        "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+        "requestBody": {"required": true, "content": {"application/json": {"schema": {"type": "object", "properties": {"estado": {"type": "string"}}}}}},
+        "responses": {"200": {"description": "Estado actualizado"}, "400": {"description": "Error de validación"}}
+      }
+    },
+    "/api/clientes": {
+      "post": {
+        "tags": ["Admin"],
+        "summary": "Registrar un nuevo cliente (rol: admin)",
+        "security": [{"bearerAuth": []}],
+        "requestBody": {"required": true, "content": {"application/json": {"schema": {"type": "object", "properties": {"nombre": {"type": "string"}, "email": {"type": "string"}, "telefono": {"type": "string"}}}}}},
+        "responses": {"201": {"description": "Cliente creado"}, "400": {"description": "Campos obligatorios"}, "409": {"description": "Email ya existe"}}
+      }
+    },
+    "/api/clientes/{id}": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "Obtener cliente por ID (rol: admin)",
+        "security": [{"bearerAuth": []}],
+        "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+        "responses": {"200": {"description": "Cliente encontrado"}, "404": {"description": "No encontrado"}}
+      },
+      "delete": {
+        "tags": ["Admin"],
+        "summary": "Eliminar cliente (rol: admin)",
+        "security": [{"bearerAuth": []}],
+        "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+        "responses": {"200": {"description": "Cliente eliminado"}, "404": {"description": "No encontrado"}}
+      }
+    },
+    "/api/logistica/pedidos/validados": {
+      "get": {
+        "tags": ["Logística"],
+        "summary": "Pedidos listos para ruta (rol: admin)",
+        "security": [{"bearerAuth": []}],
+        "responses": {"200": {"description": "Lista de pedidos validados"}}
+      }
+    },
+    "/api/logistica/ruta/seguimiento/{id}": {
+      "get": {
+        "tags": ["Logística"],
+        "summary": "GPS/estatus del pedido (rol: admin)",
+        "security": [{"bearerAuth": []}],
+        "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+        "responses": {"200": {"description": "Seguimiento del pedido"}, "404": {"description": "No encontrado"}}
+      }
+    },
+    "/api/logistica/reportes/diarios": {
+      "get": {
+        "tags": ["Logística"],
+        "summary": "Reporte diario de logística (rol: admin)",
+        "security": [{"bearerAuth": []}],
+        "responses": {"200": {"description": "Reporte generado"}}
+      }
+    },
+    "/api/logistica/asignar-repartidor/{id}": {
+      "put": {
+        "tags": ["Logística"],
+        "summary": "Asignar unidad y operador (rol: admin)",
+        "security": [{"bearerAuth": []}],
+        "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+        "requestBody": {"required": true, "content": {"application/json": {"schema": {"type": "object", "properties": {"repartidor": {"type": "string"}, "unidad": {"type": "string"}}}}}},
+        "responses": {"200": {"description": "Repartidor asignado"}, "400": {"description": "Error de validación"}}
+      }
+    },
+    "/api/logistica/ruta/estado/{id}": {
+      "put": {
+        "tags": ["Logística"],
+        "summary": "Cambiar estado del pedido en ruta (rol: admin)",
+        "security": [{"bearerAuth": []}],
+        "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+        "requestBody": {"required": true, "content": {"application/json": {"schema": {"type": "object", "properties": {"estado": {"type": "string"}}}}}},
+        "responses": {"200": {"description": "Estado actualizado"}, "400": {"description": "Error de validación"}}
+      }
+    },
+    "/api/logistica/incidencias": {
+      "post": {
+        "tags": ["Logística"],
+        "summary": "Registrar incidencia en entrega (rol: admin)",
+        "security": [{"bearerAuth": []}],
+        "requestBody": {"required": true, "content": {"application/json": {"schema": {"type": "object", "properties": {"pedidoId": {"type": "string"}, "descripcion": {"type": "string"}}}}}},
+        "responses": {"201": {"description": "Incidencia registrada"}, "400": {"description": "Error de validación"}}
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+} 
