@@ -1,13 +1,82 @@
 [
-  {"id": 1, "nombre": "Pollo entero", "categoria": "Pollos", "unidad": "kg", "precio": 48.50},
-  {"id": 2, "nombre": "Pechuga de pollo", "categoria": "Pollos", "unidad": "kg", "precio": 65.00},
-  {"id": 3, "nombre": "Costilla de cerdo", "categoria": "Carnes", "unidad": "kg", "precio": 98.00},
-  {"id": 4, "nombre": "Carne molida de res", "categoria": "Carnes", "unidad": "kg", "precio": 120.00},
-  {"id": 5, "nombre": "Papa cambray", "categoria": "Verduras", "unidad": "kg", "precio": 22.00},
-  {"id": 6, "nombre": "Cebolla blanca", "categoria": "Verduras", "unidad": "kg", "precio": 18.00},
-  {"id": 7, "nombre": "Aceite vegetal 1L", "categoria": "Abarrotes", "unidad": "pieza", "precio": 38.00},
-  {"id": 8, "nombre": "Adobo para pollo", "categoria": "Abarrotes", "unidad": "pieza", "precio": 15.00},
-  {"id": 9, "nombre": "Sal de mesa 1kg", "categoria": "Abarrotes", "unidad": "pieza", "precio": 12.00},
-  {"id": 10, "nombre": "Pierna de pollo", "categoria": "Pollos", "unidad": "kg", "precio": 55.00}
+  {
+    "id": 1,
+    "nombre": "Pollo entero",
+    "categoria": "Pollos",
+    "unidad": "kg",
+    "precio": 48.5,
+    "stock": 0
+  },
+  {
+    "id": 2,
+    "nombre": "Pechuga de pollo",
+    "categoria": "Pollos",
+    "unidad": "kg",
+    "precio": 65,
+    "stock": 20
+  },
+  {
+    "id": 3,
+    "nombre": "Costilla de cerdo",
+    "categoria": "Carnes",
+    "unidad": "kg",
+    "precio": 98,
+    "stock": 25
+  },
+  {
+    "id": 4,
+    "nombre": "Carne molida de res",
+    "categoria": "Carnes",
+    "unidad": "kg",
+    "precio": 120,
+    "stock": 40
+  },
+  {
+    "id": 5,
+    "nombre": "Papa cambray",
+    "categoria": "Verduras",
+    "unidad": "kg",
+    "precio": 22,
+    "stock": 100
+  },
+  {
+    "id": 6,
+    "nombre": "Cebolla blanca",
+    "categoria": "Verduras",
+    "unidad": "kg",
+    "precio": 18,
+    "stock": 80
+  },
+  {
+    "id": 7,
+    "nombre": "Aceite vegetal 1L",
+    "categoria": "Abarrotes",
+    "unidad": "pieza",
+    "precio": 38,
+    "stock": 60
+  },
+  {
+    "id": 8,
+    "nombre": "Adobo para pollo",
+    "categoria": "Abarrotes",
+    "unidad": "pieza",
+    "precio": 15,
+    "stock": 45
+  },
+  {
+    "id": 9,
+    "nombre": "Sal de mesa 1kg",
+    "categoria": "Abarrotes",
+    "unidad": "pieza",
+    "precio": 12,
+    "stock": 70
+  },
+  {
+    "id": 10,
+    "nombre": "Pierna de pollo",
+    "categoria": "Pollos",
+    "unidad": "kg",
+    "precio": 55,
+    "stock": 35
+  }
 ]
-  

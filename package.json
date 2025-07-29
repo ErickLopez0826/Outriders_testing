@@ -1,4 +1,11 @@
 {
+  "name": "api-outriders",
+  "version": "1.0.0",
+  "description": "API estructurada con metodología Onion",
+  "main": "api_outriders/app.js",
+  "scripts": {
+    "start": "node api_outriders/app.js"
+  },
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^5.1.0",

@@ -12,10 +12,13 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // Rutas separadas por rol
 const clienteRoutes = require('./routes/clienteRoutes');
 const adminRoutes = require('./routes/adminRoutes');
-const authRole = require('./middleware/authRole');
+const logisticaController = require('./controllers/logisticaController');
+const monitorController = require('./controllers/monitorController');
 
 app.use('/api', clienteRoutes);
-app.use('/api/admin', authRole('admin'), adminRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api', logisticaController);
+app.use('/api', monitorController);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

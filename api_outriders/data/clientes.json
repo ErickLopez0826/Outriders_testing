@@ -25,5 +25,14 @@
     "contacto": "Carlos Ruiz",
     "telefono": "5551122334",
     "email": "info@elcentro.com"
+  },
+  {
+    "id": "4",
+    "nombre_empresa": "Erick",
+    "rfc": "RFC004",
+    "direccion": "Dirección pendiente",
+    "contacto": "Erick",
+    "telefono": "1234567890",
+    "email": "erick552@gmail.com"
   }
 ]

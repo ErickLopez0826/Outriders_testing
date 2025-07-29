@@ -1,19 +1,31 @@
-const express = require('express');
-const router = express.Router();
 const ProductoService = require('../services/productoService');
 
 // GET /api/catalogo
-router.get('/catalogo', (req, res) => {
-  const productos = ProductoService.getCatalogo();
-  res.json(productos);
-});
+const getCatalogo = (req, res) => {
+  try {
+    const productos = ProductoService.getCatalogo();
+    res.json(productos);
+  } catch (error) {
+    console.error('Error al obtener catálogo:', error);
+    res.status(500).json({ mensaje: 'Error interno del servidor' });
+  }
+};
 
 // GET /api/productos/:id
-router.get('/productos/:id', (req, res) => {
-  const ProductoService = require('../services/productoService');
-  const producto = ProductoService.getProductoById(req.params.id);
-  if (!producto) return res.status(404).json({ mensaje: 'Producto no encontrado' });
-  res.json(producto);
-});
+const getProductoById = (req, res) => {
+  try {
+    const producto = ProductoService.getProductoById(req.params.id);
+    if (!producto) {
+      return res.status(404).json({ mensaje: 'Producto no encontrado' });
+    }
+    res.json(producto);
+  } catch (error) {
+    console.error('Error al obtener producto:', error);
+    res.status(500).json({ mensaje: 'Error interno del servidor' });
+  }
+};
 
-module.exports = router; 
+module.exports = {
+  getCatalogo,
+  getProductoById
+}; 

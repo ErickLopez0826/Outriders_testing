@@ -4,17 +4,25 @@ const auth = require('../middleware/auth');
 const authRole = require('../middleware/authRole');
 
 // Controladores
-const pedidoController = require('../controllers/pedidoController');
-const clienteController = require('../controllers/clienteController');
+const { 
+  editarPedido, 
+  cancelarPedido, 
+  cambiarEstado 
+} = require('../controllers/pedidoController');
+const { 
+  createCliente, 
+  deleteCliente, 
+  getClienteById 
+} = require('../controllers/clienteController');
 
 // Pedidos (admin)
-router.put('/pedidos/:id', auth, authRole('admin'), pedidoController);
-router.delete('/pedidos/:id', auth, authRole('admin'), pedidoController);
-router.put('/pedidos/estado/:id', auth, authRole('admin'), pedidoController);
+router.put('/pedidos/:id', auth, authRole('admin'), editarPedido);
+router.delete('/pedidos/:id', auth, authRole('admin'), cancelarPedido);
+router.put('/pedidos/estado/:id', auth, authRole('admin'), cambiarEstado);
 
 // Clientes (admin)
-router.post('/clientes', auth, authRole('admin'), clienteController);
-router.get('/clientes/:id', auth, authRole('admin'), clienteController);
-router.delete('/clientes/:id', auth, authRole('admin'), clienteController);
+router.post('/clientes', auth, authRole('admin'), createCliente);
+router.get('/clientes/:id', auth, authRole('admin'), getClienteById);
+router.delete('/clientes/:id', auth, authRole('admin'), deleteCliente);
 
 module.exports = router; 

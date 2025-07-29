@@ -3,7 +3,7 @@
   "info": {
     "title": "API Outriders",
     "version": "1.0.0",
-    "description": "Documentación de la API Outriders.\n\n**Autenticación:** Todos los endpoints protegidos requieren un token JWT en el header Authorization. El token debe incluir el campo `rol` (`cliente` o `admin`).\n\n**Rutas:**\n- `/api` — Endpoints para clientes (rol: cliente)\n- `/api/admin` — Endpoints para administradores (rol: admin)"
+    "description": "Documentación de la API Outriders"
   },
   "tags": [
     { "name": "Cliente", "description": "Operaciones para usuarios con rol cliente" },
@@ -15,16 +15,64 @@
       "post": {
         "tags": ["Cliente"],
         "summary": "Registrar un nuevo cliente y usuario",
-        "requestBody": {"required": true, "content": {"application/json": {"schema": {"type": "object", "properties": {"nombre": {"type": "string"}, "email": {"type": "string"}, "telefono": {"type": "string"}, "username": {"type": "string"}, "password": {"type": "string"}}}}}},
-        "responses": {"201": {"description": "Registro exitoso"}, "400": {"description": "Campos obligatorios"}, "409": {"description": "Usuario o email ya existe"}}
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["nombre", "email", "telefono", "password"],
+                "properties": {
+                  "nombre": {"type": "string", "description": "Nombre completo del cliente"},
+                  "email": {"type": "string", "format": "email", "description": "Email del cliente"},
+                  "telefono": {"type": "string", "description": "Número de teléfono"},
+                  "password": {"type": "string", "description": "Contraseña del usuario"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {"description": "Registro exitoso"},
+          "400": {"description": "Campos obligatorios"},
+          "409": {"description": "Usuario o email ya existe"}
+        }
       }
     },
     "/api/login": {
       "post": {
         "tags": ["Cliente"],
-        "summary": "Autenticación de usuario y entrega de token JWT (rol: cliente o admin)",
-        "requestBody": {"required": true, "content": {"application/json": {"schema": {"type": "object", "properties": {"username": {"type": "string"}, "password": {"type": "string"}}}}}},
-        "responses": {"200": {"description": "Token JWT"}, "401": {"description": "Credenciales inválidas"}}
+        "summary": "Autenticación de usuario y entrega de token JWT",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "password"],
+                "properties": {
+                  "email": {"type": "string", "format": "email", "description": "Email del usuario"},
+                  "password": {"type": "string", "description": "Contraseña del usuario"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {"description": "Token JWT"},
+          "401": {"description": "Credenciales inválidas"}
+        }
+      }
+    },
+    "/api/me": {
+      "get": {
+        "tags": ["Cliente"],
+        "summary": "Obtener información del usuario actual",
+        "security": [{"bearerAuth": []}],
+        "responses": {
+          "200": {"description": "Información del usuario"},
+          "401": {"description": "Token requerido"}
+        }
       }
     },
     "/api/catalogo": {
@@ -47,7 +95,31 @@
         "tags": ["Cliente"],
         "summary": "Crear un nuevo pedido (rol: cliente)",
         "security": [{"bearerAuth": []}],
-        "requestBody": {"required": true, "content": {"application/json": {"schema": {"type": "object", "properties": {"clienteId": {"type": "string"}, "productos": {"type": "array", "items": {"type": "object", "properties": {"productoId": {"type": "string"}, "cantidad": {"type": "integer"}}}}}}}}},
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["clienteId", "productos"],
+                "properties": {
+                  "clienteId": {"type": "string", "description": "ID del cliente"},
+                  "productos": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["productoId", "cantidad"],
+                      "properties": {
+                        "productoId": {"type": "string", "description": "ID del producto"},
+                        "cantidad": {"type": "integer", "description": "Cantidad del producto"}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {"201": {"description": "Pedido creado"}, "400": {"description": "Error de validación"}}
       }
     },
@@ -58,20 +130,6 @@
         "security": [{"bearerAuth": []}],
         "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
         "responses": {"200": {"description": "Pedido encontrado"}, "404": {"description": "No encontrado"}}
-      },
-      "put": {
-        "tags": ["Admin"],
-        "summary": "Editar productos o cantidades de un pedido existente (rol: admin)",
-        "security": [{"bearerAuth": []}],
-        "requestBody": {"required": true, "content": {"application/json": {"schema": {"type": "object", "properties": {"productos": {"type": "array", "items": {"type": "object", "properties": {"productoId": {"type": "string"}, "cantidad": {"type": "integer"}}}}}}}}},
-        "responses": {"200": {"description": "Pedido actualizado"}, "400": {"description": "Error de validación"}}
-      },
-      "delete": {
-        "tags": ["Admin"],
-        "summary": "Cancelar un pedido (rol: admin)",
-        "security": [{"bearerAuth": []}],
-        "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
-        "responses": {"200": {"description": "Pedido cancelado"}, "400": {"description": "No se puede cancelar"}}
       }
     },
     "/api/pedidos/cliente/{id}": {
@@ -83,26 +141,94 @@
         "responses": {"200": {"description": "Lista de pedidos"}}
       }
     },
-    "/api/pedidos/estado/{id}": {
+    "/api/admin/pedidos/{id}": {
+      "put": {
+        "tags": ["Admin"],
+        "summary": "Editar productos o cantidades de un pedido existente (rol: admin)",
+        "security": [{"bearerAuth": []}],
+        "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["productos"],
+                "properties": {
+                  "productos": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["productoId", "cantidad"],
+                      "properties": {
+                        "productoId": {"type": "string", "description": "ID del producto"},
+                        "cantidad": {"type": "integer", "description": "Cantidad del producto"}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "Pedido actualizado"}, "400": {"description": "Error de validación"}}
+      },
+      "delete": {
+        "tags": ["Admin"],
+        "summary": "Cancelar un pedido (rol: admin)",
+        "security": [{"bearerAuth": []}],
+        "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+        "responses": {"200": {"description": "Pedido cancelado"}, "400": {"description": "No se puede cancelar"}}
+      }
+    },
+    "/api/admin/pedidos/estado/{id}": {
       "put": {
         "tags": ["Admin"],
         "summary": "Cambiar estado del pedido (rol: admin)",
         "security": [{"bearerAuth": []}],
         "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
-        "requestBody": {"required": true, "content": {"application/json": {"schema": {"type": "object", "properties": {"estado": {"type": "string"}}}}}},
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["estado"],
+                "properties": {
+                  "estado": {"type": "string", "description": "Nuevo estado del pedido", "enum": ["Recibido", "En ruta", "Entregado"]}
+                }
+              }
+            }
+          }
+        },
         "responses": {"200": {"description": "Estado actualizado"}, "400": {"description": "Error de validación"}}
       }
     },
-    "/api/clientes": {
+    "/api/admin/clientes": {
       "post": {
         "tags": ["Admin"],
         "summary": "Registrar un nuevo cliente (rol: admin)",
         "security": [{"bearerAuth": []}],
-        "requestBody": {"required": true, "content": {"application/json": {"schema": {"type": "object", "properties": {"nombre": {"type": "string"}, "email": {"type": "string"}, "telefono": {"type": "string"}}}}}},
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["nombre", "email", "telefono"],
+                "properties": {
+                  "nombre": {"type": "string", "description": "Nombre del cliente"},
+                  "email": {"type": "string", "format": "email", "description": "Email del cliente"},
+                  "telefono": {"type": "string", "description": "Número de teléfono"}
+                }
+              }
+            }
+          }
+        },
         "responses": {"201": {"description": "Cliente creado"}, "400": {"description": "Campos obligatorios"}, "409": {"description": "Email ya existe"}}
       }
     },
-    "/api/clientes/{id}": {
+    "/api/admin/clientes/{id}": {
       "get": {
         "tags": ["Admin"],
         "summary": "Obtener cliente por ID (rol: admin)",
@@ -149,7 +275,21 @@
         "summary": "Asignar unidad y operador (rol: admin)",
         "security": [{"bearerAuth": []}],
         "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
-        "requestBody": {"required": true, "content": {"application/json": {"schema": {"type": "object", "properties": {"repartidor": {"type": "string"}, "unidad": {"type": "string"}}}}}},
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["repartidor", "unidad"],
+                "properties": {
+                  "repartidor": {"type": "string", "description": "Nombre del repartidor"},
+                  "unidad": {"type": "string", "description": "Identificación de la unidad"}
+                }
+              }
+            }
+          }
+        },
         "responses": {"200": {"description": "Repartidor asignado"}, "400": {"description": "Error de validación"}}
       }
     },
@@ -159,7 +299,20 @@
         "summary": "Cambiar estado del pedido en ruta (rol: admin)",
         "security": [{"bearerAuth": []}],
         "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
-        "requestBody": {"required": true, "content": {"application/json": {"schema": {"type": "object", "properties": {"estado": {"type": "string"}}}}}},
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["estado"],
+                "properties": {
+                  "estado": {"type": "string", "description": "Nuevo estado del pedido", "enum": ["Recibido", "En ruta", "Entregado"]}
+                }
+              }
+            }
+          }
+        },
         "responses": {"200": {"description": "Estado actualizado"}, "400": {"description": "Error de validación"}}
       }
     },
@@ -168,7 +321,21 @@
         "tags": ["Logística"],
         "summary": "Registrar incidencia en entrega (rol: admin)",
         "security": [{"bearerAuth": []}],
-        "requestBody": {"required": true, "content": {"application/json": {"schema": {"type": "object", "properties": {"pedidoId": {"type": "string"}, "descripcion": {"type": "string"}}}}}},
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["pedidoId", "descripcion"],
+                "properties": {
+                  "pedidoId": {"type": "string", "description": "ID del pedido"},
+                  "descripcion": {"type": "string", "description": "Descripción de la incidencia"}
+                }
+              }
+            }
+          }
+        },
         "responses": {"201": {"description": "Incidencia registrada"}, "400": {"description": "Error de validación"}}
       }
     }
@@ -182,4 +349,4 @@
       }
     }
   }
-} 
+}

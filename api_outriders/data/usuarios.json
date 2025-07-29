@@ -13,5 +13,13 @@
     "email": "admin@apycar.com",
     "password": "admin123",
     "rol": "admin"
+  },
+  {
+    "id": "3",
+    "nombre": "erick552@gmail.com",
+    "email": "erick552@gmail.com",
+    "password": "1234",
+    "rol": "cliente",
+    "id_cliente": "4"
   }
 ]
